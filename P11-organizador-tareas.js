@@ -74,20 +74,139 @@ planner.filterTasksByTag("shopping")
 
 //Mi solucion
 
-export function createTaskPlanner() {
-  // Tu código aquí 👈
-  const tareas = [];
+function createTaskPlanner(){
+  let tareas = [];
 
   return {
-    addTask: task => { tareas.push(task); },
+    printTasks: () => { console.log(tareas)},
+    addTask: task => {
+      task.completed = false;
+      tareas.push(task)
+    },
     removeTask: nombreTask => {
-      tareas = tareas.filter(tarea => tarea.name !== nombreTask || tarea.id !== nombreTask);
+      if(typeof nombreTask === "number"){
+        tareas = tareas.filter(tarea => tarea.id !== nombreTask);
+      }
+      else if(typeof nombreTask === "string"){
+        tareas = tareas.filter(tarea => tarea.name !== nombreTask)
+      }
     },
-    getTask: () => tareas,
-    getPendingTask: () => tareas.filter(tarea => tarea.completed === false),
-    getCompletedTask: () => tareas.filter(tarea => tarea.completed === true),
+    getTasks: () => tareas,
+    getPendingTasks: () => tareas.filter(tarea => tarea.completed === false),
+    getCompletedTasks: () => tareas.filter(tarea => tarea.completed === true),
     markTaskAsCompleted: nombreTask => {
-      tareas = tareas.map(tarea => { if(tarea.name === nombreTask || tarea.id === nombreTask) tarea.completed = true })
+      tareas = tareas.map(tarea => { 
+        if(tarea.name === nombreTask || tarea.id === nombreTask) tarea.completed = true;
+        return tarea;
+      })
     },
+    getSortedTasksByPriority: () => {
+      const copiaTareas = tareas.map(tarea => tarea);
+      
+      return copiaTareas.sort((a, b) => a.priority - b.priority);
+    },
+    filterTasksByTag: (tag) => tareas.filter(tarea => {
+      for(let i = 0; i < tarea.tags.length; i++){
+        if(tarea.tags[i] === tag) return tarea;
+      }
+    }),
+    updateTask: (idTask, updates) => {
+      tareas = tareas.map(tarea => { 
+        if(tarea.id === idTask) {
+          Object.assign(tarea, updates);
+        }
+
+        return tarea;
+      })
+    }
   }
+}
+
+const planner = createTaskPlanner();
+planner.addTask({
+  id: 1,
+  name: "Comprar leche",
+  priority: 1,
+  tags: ["shopping", "home"]
+});
+planner.addTask({
+  id: 2,
+  name: "Llamar a Juan",
+  priority: 3,
+  tags: ["personal", "negocios"]
+});
+planner.addTask({
+  id: 3,
+  name: "Terminar el código",
+  priority: 1,
+  tags: ["trabajo", "javascript"]
+});
+planner.addTask({
+  id: 4,
+  name: "Tomar cerveza",
+  priority: 2,
+  tags: ["personal", "diversion", "home"]
+});
+planner.updateTask(2, {
+  name: "Agendar cita con Juan",
+  priority: 1,
+});
+planner.printTasks();
+
+//Solucion de Platzi
+export function createTaskPlanner() {
+  let tasks = [];
+
+  return {
+    addTask(task) {
+      task.completed = false;
+      tasks.push(task);
+    },
+
+    removeTask(value) {
+      if (typeof value === "number") {
+        tasks = tasks.filter((task) => task.id !== value);
+      } else {
+        tasks = tasks.filter((task) => task.name !== value);
+      }
+    },
+
+    getTasks() {
+      return tasks;
+    },
+
+    getPendingTasks() {
+      return tasks.filter((task) => !task.completed);
+    },
+
+    getCompletedTasks() {
+      return tasks.filter((task) => task.completed);
+    },
+
+    markTaskAsCompleted(value) {
+      let index;
+
+      if (typeof value === "number") {
+        index = tasks.findIndex((task) => task.id === value);
+      } else {
+        index = tasks.findIndex((task) => task.name === value);
+      }
+
+      tasks[index].completed = true;
+    },
+
+    getSortedTasksByPriority() {
+      const sortedTasks = [...tasks].sort((a, b) => a.priority - b.priority);
+      return sortedTasks;
+    },
+
+    filterTasksByTag(tag) {
+      return tasks.filter((task) => task.tags.includes(tag));
+    },
+
+    updateTask(taskId, updates) {
+      const index = tasks.findIndex((task) => task.id === taskId);
+      tasks[index] = { ...tasks[index], ...updates };
+    },
+  };
 }
