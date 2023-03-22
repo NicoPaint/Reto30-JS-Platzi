@@ -36,8 +36,9 @@ protectedDog.owner.name = "Pedro"
 protectedDog.owner.name // "Victor"
 */
 
-//Mi solucion
-const copiedDog = Object.assign({}, dog);
+//Mi solución. No entendi realmente como se debia hacer el ejercicio por lo que no pude solucionarlo.
+export function protectDog(dog) {
+  const copiedDog = Object.assign({}, dog);
   Object.freeze(copiedDog);
 
   for (let property in copiedDog) {
@@ -47,7 +48,8 @@ const copiedDog = Object.assign({}, dog);
   return copiedDog;
 }
 
-//Solucion de Platzi
+
+//Solución de Platzi
 export function protectDog(dog) {
   const copy = Object.assign({}, dog);
   const propertiesToProtect = ["owner", "favoriteFood", "activities"];
@@ -63,4 +65,29 @@ export function protectDog(dog) {
 
   freezeRecursively(copy);
   return copy;
+}
+
+//Otra solución 
+export function protectDog(dog) {
+  // Tu código aquí 👈
+  const copia = Object.assign({}, dog);
+  Object.freeze(copia);
+
+  for (const key in copia) {
+    const value = copia[key];
+    if (typeof value === 'object') Object.freeze(value);
+  }
+  return copia;
+}
+
+//Mi corrección despues de analizar mi intento de solución y la "otra solución" que que si funcionó 
+export function protectDog(dog) {
+  const copiedDog = Object.assign({}, dog);
+  Object.freeze(copiedDog);
+
+  for (let property in copiedDog) {
+    if (typeof copiedDog[property] === "object") Object.freeze(copiedDog[property]);  //Primero se cambió copiedDog.property por copiedDog[property] y segundo se cambió el argumento que se la pasó a la funcion Object.freeze() porque se estaba aplicando de manera incorrecta.
+  }
+
+  return copiedDog;
 }
