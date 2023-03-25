@@ -121,15 +121,15 @@ function hotelSystem(rooms) {
     const reservaciones = [{
         id: 1,
         name: "John Doe",
-        checkIn: "01/01",
-        checkOut: "02/01",
+        checkIn: "01/03",
+        checkOut: "02/03",
         roomNumber: 1,
       },
       {
         id: 2,
         name: "Doe",
-        checkIn: "03/01",
-        checkOut: "04/01",
+        checkIn: "03/03",
+        checkOut: "04/03",
         roomNumber: 1,
       },
       {
@@ -158,7 +158,32 @@ function hotelSystem(rooms) {
         getSortReservations: () => {
             const copiaOrdenada = [...reservaciones];
 
-            return console.log(copiaOrdenada.sort((a, b) => {}));
+            return console.log(copiaOrdenada.sort((a, b) => {
+                const checkInPrimero = a.checkIn.split("/");
+                const checkInSegundo = b.checkIn.split("/");
+
+                if(checkInPrimero[0] < checkInSegundo[0]){
+                  return -1;
+                } 
+                else if(checkInPrimero[0] > checkInSegundo[0]){
+                  return 1;
+                }
+
+                return 0;
+
+            }).sort((a, b) => {
+              const checkInPrimero = a.checkIn.split("/");
+              const checkInSegundo = b.checkIn.split("/");
+
+              if(checkInPrimero[1] < checkInSegundo[1]){
+                return -1;
+              }
+              else if(checkInPrimero[1] > checkInSegundo[1]){
+                return 1;
+              }
+
+              return 0;
+            }));
         },
         addReservation: reservation => {
             
