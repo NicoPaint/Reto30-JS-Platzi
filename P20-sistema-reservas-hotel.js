@@ -118,7 +118,7 @@ Output:
 
 function hotelSystem(rooms) {
     // Tu código aquí
-    const reservaciones = [{
+    let reservaciones = [{
         id: 1,
         name: "John Doe",
         checkIn: "01/03",
@@ -172,10 +172,38 @@ function hotelSystem(rooms) {
             });
         },
         addReservation: reservation => {
+            const isOccupied = reservaciones.find(reserva => {
+              if(reserva.roomNumber === reservation.roomNumber){
+                const checkInPrimero = reserva.checkIn.split("/");
+                const checkOutPrimero = reserva.checkOut.split("/");
+
+                const checkInSegundo = reservation.checkIn.split("/");
+                const checkOutSegundo = reservation.checkOut.split("/");
+
+                
+              }
+            })
+
+            if(isOccupied) throw new Error("La habitación no está disponible");
             
+            reservaciones.push(reservation);
+        },
+        removeReservation: id => {
+          const removed = reservaciones.find(reserva => reserva.id === id);
+
+          if(!removed) throw new Error("La reservación que se busca remover no existe");
+          
+          reservaciones = reservaciones.filter(reserva => reserva != removed);
+          return removed;
+          
+        },
+        getReservations: () => reservaciones,
+        getAvailableRooms: (checkIn, checkOut) => {
+
         }
     }
 }
 
 const myHotel = hotelSystem(10);
-myHotel.getSortReservations();
+myHotel.printReservations();
+myHotel.removeReservation(9);
