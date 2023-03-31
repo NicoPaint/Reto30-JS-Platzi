@@ -118,34 +118,7 @@ Output:
 
 function hotelSystem(rooms) {
     // Tu código aquí
-    let reservaciones = [{
-        id: 1,
-        name: "John Doe",
-        checkIn: "01/03",
-        checkOut: "02/03",
-        roomNumber: 1,
-      },
-      {
-        id: 2,
-        name: "Doe",
-        checkIn: "03/03",
-        checkOut: "04/03",
-        roomNumber: 1,
-      },
-      {
-        id: 3,
-        name: "John",
-        checkIn: "04/01",
-        checkOut: "05/01",
-        roomNumber: 1,
-      },
-      {
-        id: 4,
-        name: "Doe John",
-        checkIn: "02/02",
-        checkOut: "03/02",
-        roomNumber: 1,
-      }];
+    let reservaciones = [];
 
     return {
         printReservations: () => console.log(reservaciones),
@@ -173,19 +146,21 @@ function hotelSystem(rooms) {
         },
         addReservation: reservation => {
             const isOccupied = reservaciones.find(reserva => {
-              if(reserva.roomNumber === reservation.roomNumber){
-                const checkInPrimero = reserva.checkIn.split("/");
-                const checkOutPrimero = reserva.checkOut.split("/");
+              if(reservation.roomNumber === reserva.roomNumber){
+                const inSaved = new Date(reserva.checkIn.split("/").reverse().join("/"));  //Se tuvo que cambiar el orden del string porque el objecto Date acepta formato mm/dd y la reserva esta en formato dd/mm.
+                const outSaved = new Date(reserva.checkOut.split("/").reverse().join("/"));
 
-                const checkInSegundo = reservation.checkIn.split("/");
-                const checkOutSegundo = reservation.checkOut.split("/");
-
-                
+                const inReserving = new Date(reservation.checkIn.split("/").reverse().join("/"));
+                const outReserving = new Date(reservation.checkOut.split("/").reverse().join("/"));
+  
+                if(inReserving >= inSaved && inReserving < outSaved) return reserva;
+                else if(outReserving <= outSaved && outReserving > inSaved) return reserva;
+                else if(inReserving < inSaved && outReserving > outSaved) return reserva;
               }
             })
 
             if(isOccupied) throw new Error("La habitación no está disponible");
-            
+
             reservaciones.push(reservation);
         },
         removeReservation: id => {
@@ -206,4 +181,19 @@ function hotelSystem(rooms) {
 
 const myHotel = hotelSystem(10);
 myHotel.printReservations();
-myHotel.removeReservation(9);
+myHotel.addReservation({
+  id: 1,
+  name: "John Doe",
+  checkIn: "16/04",
+  checkOut: "20/04",
+  roomNumber: 1,
+});
+myHotel.addReservation({
+  id: 2,
+  name: "Nick Johns",
+  checkIn: "16/05",
+  checkOut: "20/05",
+  roomNumber: 1,
+});
+myHotel.printReservations();
+
