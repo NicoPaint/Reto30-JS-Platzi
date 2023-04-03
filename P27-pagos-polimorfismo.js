@@ -88,12 +88,13 @@ import { Pay } from "./Pay.class.js";
 export class PayPal extends Pay {
   // Tu código aquí 👈
   constructor(email){
+    super();
     this.email = email;
   }
   
   makePay(monto) {
     return {
-      ...super,
+      ...super.makePay(monto),
       platform: "PayPal",
       email: this.email
     }
@@ -105,6 +106,20 @@ import { Pay } from "./Pay.class.js";
 
 export class Card extends Pay {
   // Tu código aquí 👈
+  constructor(cardNumber) {
+    super();
+    this.cardNumber = cardNumber;
+  }
+
+  makePay(monto) {
+    if (this.cardNumber.length !== 16) throw new Error("El numero de tarjeta no es valido");
+    else {
+      return {
+        ...super.makePay(monto),
+        lastCardNumbers: this.cardNumber.substring(12)
+      }
+    }
+  }
 }
 
 //Archivo Cash.class.js
@@ -112,9 +127,11 @@ import { Pay } from "./Pay.class.js";
 
 export class Cash extends Pay {
   // Tu código aquí 👈
+  //Como Cash devuelve lo mismo que Pay no se tuvo que hacer nada adicional
 }
 
 //Archivo exercise.js
 export function processPay(method, quantity) {
   // Tu código aquí 👈
+  return method.makePay(quantity);
 }
