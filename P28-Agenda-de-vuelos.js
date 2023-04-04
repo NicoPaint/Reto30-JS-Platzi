@@ -92,13 +92,16 @@ export class Flight {
   sellTicket(passenger) {
     // Tu código aquí 👈
     if (this.capacity > 0) {
+      this.capacity--;
       this.passengers.push({
         fullName: `${passenger.name} ${passenger.lastName}`,
         age: passenger.age
       });
+      
       const { origin, destination, date, price } = this;
       passenger.flights.push({ origin, destination, date, price });
-    
+      
+      return new Reservation(this, passenger);
     }
   }
 }
@@ -110,10 +113,25 @@ import { Reservation } from "./Reservation";
 export class PremiumFlight extends Flight {
   constructor(origin, destination, date, capacity, price, specialService) {
     // Tu código aquí 👈
+    super(origin, destination, date, capacity, price);
+    this.specialService = specialService;
   }
 
   sellTicket(passenger) {
     // Tu código aquí 👈
+    if (this.capacity > 0) {
+      this.capacity--;
+      this.passengers.push({
+        fullName: `${passenger.name} ${passenger.lastName}`,
+        age: passenger.age
+      });
+      
+      const { origin, destination, date, price, specialService } = this;
+      const totalPrice = price + specialService;
+      passenger.flights.push({ origin, destination, date, totalPrice });
+      
+      return new Reservation(this, passenger);
+    }
   }
 }
 
@@ -124,6 +142,32 @@ import { Reservation } from "./Reservation";
 export class EconomicFlight extends Flight {
   sellTicket(passenger) {
     // Tu código aquí 👇
+    if (this.capacity > 0) {
+      if (passenger.age < 18 || passenger.age > 65) {
+        this.capacity--;
+        this.passengers.push({
+          fullName: `${passenger.name} ${passenger.lastName}`,
+          age: passenger.age
+        });
+        
+        const { origin, destination, date, price } = this;
+        const finalPrice = price * 0.8;
+        passenger.flights.push({ origin, destination, date, finalPrice });
+        
+        return new Reservation(this, passenger);
+      }
+
+      this.capacity--;
+      this.passengers.push({
+        fullName: `${passenger.name} ${passenger.lastName}`,
+        age: passenger.age
+      });
+      
+      const { origin, destination, date, price } = this;
+      passenger.flights.push({ origin, destination, date, price });
+      
+      return new Reservation(this, passenger);
+    }
   }
 }
 
@@ -142,9 +186,18 @@ export class Passenger {
 export class Reservation {
   constructor(flight, passenger) {
     // Tu código aquí 👈
+    this.flight = flight;
+    this.passenger = passenger;
   }
 
   reservationDetails() {
     // Tu código aquí 👈
-  }
+    const { origin, destination, date } = this.flight;
+    const fullName = `${this.passenger.name} ${this.passenger.lastName}`;
+    return {
+      origin,
+      destination,
+      date,
+      reservedBy: fullName
+    }
 } 
