@@ -121,15 +121,17 @@ export class PremiumFlight extends Flight {
     // Tu código aquí 👈
     if (this.capacity > 0) {
       this.capacity--;
+      this.price += this.specialService;
+      
       this.passengers.push({
         fullName: `${passenger.name} ${passenger.lastName}`,
         age: passenger.age
       });
-      
-      const { origin, destination, date, price, specialService } = this;
+
+      const { origin, destination, date, price} = this;
       const totalPrice = price + specialService;
       passenger.flights.push({ origin, destination, date, totalPrice });
-      
+
       return new Reservation(this, passenger);
     }
   }
@@ -145,15 +147,16 @@ export class EconomicFlight extends Flight {
     if (this.capacity > 0) {
       if (passenger.age < 18 || passenger.age > 65) {
         this.capacity--;
+        this.price *= 0.8;
+        
         this.passengers.push({
           fullName: `${passenger.name} ${passenger.lastName}`,
           age: passenger.age
         });
-        
+
         const { origin, destination, date, price } = this;
-        const finalPrice = price * 0.8;
-        passenger.flights.push({ origin, destination, date, finalPrice });
-        
+        passenger.flights.push({ origin, destination, date, price });
+
         return new Reservation(this, passenger);
       }
 
@@ -200,4 +203,5 @@ export class Reservation {
       date,
       reservedBy: fullName
     }
+  }
 } 
