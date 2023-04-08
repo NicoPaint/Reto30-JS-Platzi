@@ -48,5 +48,38 @@ import { User } from "./user";
 
 export class Chat {
   // Tu código aquí 👈
+  constructor() {
+    if(!Chat.instance){
+      this.users = [];
+      Chat.instance = Object.freeze(this);
+    }
+
+    return Chat.instance;
+  }
+
+  sendMessage(message){
+    this.users.forEach(user => user.messages.push(message));
+  }
+
+  addUser(user){
+    if(user instanceof User) this.users.push(user);
+  }
   
+  removeUser(name){
+    const userIndex = this.users.findIndex(user => user.name === name);
+    this.users.splice(userIndex, 1);
+  }
+}
+
+//Archivo user.js
+export class User {
+  // Este código no debe ser editado ❌
+  constructor(name) {
+    this.name = name;
+    this.messages = [];
+  }
+
+  receiveMessage(message) {
+    this.messages.push(message);
+  }
 }
