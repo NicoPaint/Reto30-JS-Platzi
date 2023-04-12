@@ -95,7 +95,7 @@ export class MessagesProxy {
 
   sendMessage(text) {
     // Tu código aquí 👈
-    if (this.user.isLoggedIn()) return this.messages.sendMessage(text);
+    if (this.user.isLoggedIn()) this.messages.sendMessage(text);
     else throw new Error("Usuario no registrado");
   }
 
