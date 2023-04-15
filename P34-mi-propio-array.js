@@ -49,8 +49,8 @@ export class MyArray {
     // Tu código aquí 👈
     let copy = { ...this.data };
 
-    for (elem in copy) {
-      func(copy[elem]);
+    for (const elem in copy) {
+      copy[elem] = func(copy[elem]);
     }
 
     return copy;
@@ -61,9 +61,9 @@ export class MyArray {
     let contador = 0;
     let copy = {};
 
-    for (elem in this.data) {
-      if (func(data[elem])) {
-        copy[contador] = elem;
+    for (const elem in this.data) {
+      if (func(this.data[elem])) {
+        copy[contador] = this.data[elem];
         contador++;
       }
     }
@@ -73,10 +73,29 @@ export class MyArray {
 
   push(item) {
     // Tu código aquí 👈
+    this.data[this.length] = item;
+    this.length++;
+
+    return this.length; 
   }
 
   pop() {
     // Tu código aquí 👈
+    if (this.length === 0) return undefined;
+    this.length--;
+
+    const eliminado = this.data[this.length];
+    let copy = {};
+
+    for (let i = 0; i < this.length; i++) {
+      copy[i] = this.data[i];
+    }
+
+    this.data = {};
+    this.data = { ...copy };
+    console.log(this.data);
+    
+    return eliminado;
   }
 
   join(character = ",") {
