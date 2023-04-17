@@ -93,17 +93,48 @@ export class MyArray {
 
     this.data = {};
     this.data = { ...copy };
-    console.log(this.data);
     
     return eliminado;
   }
 
   join(character = ",") {
     // Tu código aquí 👈
+    let newString = "";
+
+    if (this.length === 1) {
+      newString = this.data[this.length - 1];
+    }
+    else if (this.length >= 2) {
+      let contador = 0;
+      for (const elem in this.data) {
+        contador++;
+        if (contador === this.length) {
+          newString += `${this.data[elem]}`;
+          break;
+        }
+        newString += `${this.data[elem]}${character}`;
+      }
+    }
+
+    return newString;
   }
 
   shift() {
     // Tu código aquí 👈
+    if (this.length === 0) return undefined;
+    this.length--;
+
+    const eliminado = this.data[0];
+    let copy = {};
+
+    for (let i = 0; i < this.length; i++) {
+      copy[i] = this.data[i + 1];
+    }
+
+    this.data = {};
+    this.data = { ...copy };
+
+    return eliminado;
   }
 
   unshift(item) {
