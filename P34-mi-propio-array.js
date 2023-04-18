@@ -47,26 +47,29 @@ export class MyArray {
 
   map(func) {
     // Tu código aquí 👈
-    let copy = { ...this.data };
+    let copy = new MyArray();
+    copy.data = { ...this.data };
+    copy.length = this.length;
 
-    for (const elem in copy) {
-      copy[elem] = func(copy[elem]);
+    for (const elem in copy.data) {
+      copy.data[elem] = func(copy.data[elem]);
     }
 
-    return copy;
+    return copy; //como map devuelve un array nuevo, el test espera que se devuelva un array nuevo pero utilizando la implementación de esta clase propia de array (MyArray). Por lo tanto tiene que devolver tanto los datos como la longitud. Por eso no pasaba anteriormente el test, estaba solo devolviendo los datos transformados del nuevo array y no su longitud. Lo mismo aplica a Filter.
   }
 
   filter(func) {
     // Tu código aquí 👈
     let contador = 0;
-    let copy = {};
+    let copy = new MyArray();
 
     for (const elem in this.data) {
       if (func(this.data[elem])) {
-        copy[contador] = this.data[elem];
+        copy.data[contador] = this.data[elem];
         contador++;
       }
     }
+    copy.length = contador;
 
     return copy;
   }
