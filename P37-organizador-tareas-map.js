@@ -40,13 +40,46 @@ Made 1 formatting
 */
 
 //Mi solución
-export function taskManager() {
+function taskManager() {
   // Tu código aquí 👈
   const myMap = new Map();
 
   return {
     addTask: (task, tags) => {
-      
-    }
+      const lowTask = task.toLowerCase();
+
+      if (!myMap.has(lowTask)) {
+        const setTags = new Set();
+        tags.forEach(tag => setTags.add(tag));
+        myMap.set(lowTask, setTags);
+      }
+      else {
+        const thisSet = myMap.get(lowTask);
+        tags.forEach(tag => thisSet.add(tag));
+      }
+    },
+    printTasks: () => myMap,
   }
+}
+
+//Solución de Platzi
+export function taskManager() {
+  const tasks = new Map();
+
+  return {
+    addTask(task, tags) {
+      task = task.toLowerCase();
+      if (tasks.has(task)) {
+        const existingTags = tasks.get(task);
+        tags.forEach((tag) => existingTags.add(tag));
+      } else {
+        const newTags = new Set(tags);
+        tasks.set(task, newTags);
+      }
+    },
+
+    printTasks() {
+      return tasks;
+    },
+  };
 }
