@@ -182,9 +182,41 @@ export class LinkedListRecharged extends LinkedList {
 
   toArray(){
     // Tu código aquí 👈
+    const values = new Array();
+    let currentNode = this.head;
+
+    while (currentNode) {
+      values.push(currentNode.value);
+      currentNode = currentNode.next;
+    }
+
+    return values;
   }
 
   removeAt(index){
     // Tu código aquí 👈
+    if (index >= this.length || index < 0) return null;
+
+    if (index === 0) {
+      const erasedValue = this.head.value;
+      this.head = this.head.next;
+      this.length--;
+      return erasedValue;
+    }
+
+    let contador = 1;
+    let currentNode = this.head;
+
+    while (currentNode) {
+      if (index === contador) {
+        const erasedValue = currentNode.next.value;
+        currentNode.next = currentNode.next.next;
+        if (index === this.length - 1) this.tail = currentNode;
+        this.length--;
+        return erasedValue;
+      }
+      currentNode = currentNode.next;
+      contador++;
+    }
   }
 }
