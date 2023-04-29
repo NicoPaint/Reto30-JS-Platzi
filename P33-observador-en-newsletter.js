@@ -32,7 +32,7 @@ Output:
 "El suscriptor pedro@mail.com ha recibido el artículo: 30 días de js"
 */
 
-/Mi solucióm
+//Mi solucióm
 //Archivo exercise.js
 export class Newsletter {
   // Tu código aquí 👈
