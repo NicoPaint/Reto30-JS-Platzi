@@ -287,3 +287,154 @@ export class Authorization {
       if(!foundUser) throw new Error("No autorizado");
     }
   }
+
+//La solución de Platzi
+//Archivo exercise.js
+import { User } from "./User"
+
+export class Task{
+  constructor(id, description){
+    this.id = id,
+    this.description = description
+    this.completed = false
+    this.users = []
+  }
+
+  assignUser(user){
+    if(!(user instanceof User)){
+      throw new Error("No hereda de la clase user")
+    }
+    this.users.push(user)
+  }
+
+  completeTask() {
+    this.completed = true;
+    this.notifyUsers()
+  }
+
+  notifyUsers() {
+    this.users.forEach((user) => {
+      user.notify(this);
+    });
+  }
+}
+
+//Archivo TaskManager.js
+import { Task } from "./exercise";
+
+export class TaskManager {
+  constructor() {
+    this.tasks = []
+  }
+
+  static getInstance() {
+    if (!TaskManager.instance) {
+      TaskManager.instance = new TaskManager();
+    }
+    return TaskManager.instance;
+  }
+
+  addTask(task){
+    this.tasks.push(task)
+  }
+
+  getTasks(){
+    return this.tasks
+  }
+
+  getTaskById(id){
+    const task = this.tasks.filter(task => task.id === id)[0]
+    if(task){
+      return task
+    }
+
+    return null
+  }
+
+}
+
+//Archivo TaskDecorator.js
+export class TaskDecorator {
+    constructor(task, options) {
+      this.task = task
+      this.deadline = options.deadline;
+      this.priority = options.priority;
+    }
+  
+    assignUser(user) {
+      this.task.assignUser(user);
+    }
+  
+    completeTask() {
+      this.task.completeTask();
+    }
+  
+    notifyUsers() {
+      this.task.notifyUsers();
+    }
+  }
+
+//Archivo TaskBuilder.js
+import { Task } from "./exercise";
+
+export class TaskBuilder {
+  constructor() {
+    this.task = new Task();
+  }
+
+  setId(id) {
+    this.task.id = id;
+    return this;
+  }
+
+  setDescription(description) {
+    this.task.description = description;
+    return this;
+  }
+
+  setCompleted(completed) {
+    this.task.completed = completed;
+    return this;
+  }
+
+  setUsers(users) {
+    for (const user of users) {
+      this.task.assignUser(user);
+    }
+    return this;
+  }
+
+  setDeadline(deadline) {
+    this.task.deadline = deadline;
+    return this;
+  }
+
+  setPriority(priority) {
+    this.task.priority = priority;
+    return this;
+  }
+
+  build() {
+    return this.task;
+  }
+}
+
+//Archivo User.js
+export class User {
+    constructor(name) {
+      this.name = name;
+    }
+  
+    notify(task) {
+      console.log(`Usuario ${this.name}: La tarea "${task.description}" ha sido completada.`);
+    }
+}
+
+//Archivo Authorization.js
+export class Authorization {
+    checkAuthorization(user, task) {
+      if (!task.users.includes(user)) {
+        throw new Error("No autorizado");
+      }
+    }
+  }
